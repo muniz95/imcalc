@@ -20,41 +20,74 @@ class CalculatorViewState extends State<CalculatorView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("IMCalc"),
+        elevation: 0,
+        title: Text(
+          "IMCalc",
+          style: TextStyle(
+            color: Colors.deepOrange
+          ),
+        ),
       ),
       body: Center(
         child: Container(
+          color: Colors.black,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(10),
-                child: TextField(
-                  cursorRadius: Radius.circular(15),
-                  keyboardType: TextInputType.numberWithOptions(
-                    decimal: true
+              Center(
+                child: Container(
+                  width: 250,
+                  margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: Colors.deepOrange,
                   ),
-                  onChanged: (value) {
-                    _bloc.setWeight(double.tryParse(value));
-                  },
+                  child: TextField(
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.fitness_center),
+                      labelText: "Weight",
+                    ),
+                    cursorRadius: Radius.circular(15),
+                    keyboardType: TextInputType.numberWithOptions(
+                      decimal: true
+                    ),
+                    onChanged: (value) {
+                      _bloc.setWeight(double.tryParse(value));
+                    },
+                  ),
                 ),
               ),
-              Container(
-                child: TextField(
-                  keyboardType: TextInputType.numberWithOptions(
-                    decimal: true
+              Center(
+                child: Container(
+                  width: 250,
+                  margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: Colors.deepOrange,
                   ),
-                  onChanged: (value) {
-                    _bloc.setHeight(double.tryParse(value));
-                  },
+                  child: TextField(
+                    textInputAction: TextInputAction.newline,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.vertical_align_top),
+                      labelText: "Height (cm)",
+                    ),
+                    keyboardType: TextInputType.numberWithOptions(
+                      decimal: true
+                    ),
+                    onChanged: (value) {
+                      _bloc.setHeight(double.tryParse(value));
+                    },
+                  ),
                 ),
-                padding: EdgeInsets.all(10),
               ),
               StreamBuilder<double>(
                 initialData: 0.0,
                 stream: _bloc.imc,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    return snapshot.hasData ? ImcComponent(imc: snapshot.data as double) : CircularProgressIndicator();
+                    return snapshot.hasData 
+                      ? ImcComponent(bmi: snapshot.data as double)
+                      : CircularProgressIndicator();
                   }
               )
             ]

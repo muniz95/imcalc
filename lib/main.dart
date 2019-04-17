@@ -8,13 +8,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-      statusBarColor: Colors.deepOrange, //or set color with: Color(0xFF0000FF)
+      statusBarColor: Colors.black, //or set color with: Color(0xFF0000FF)
     ));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.deepOrange,
+        primaryColor: Colors.black,
       ),
       home: CalculatorView(),
     );
