@@ -7,13 +7,18 @@ class CalculatorView extends StatefulWidget {
   State<StatefulWidget> createState() => CalculatorViewState();
 }
 
-class CalculatorViewState extends State<CalculatorView> {
+class CalculatorViewState extends State<CalculatorView> with TickerProviderStateMixin {
+  final _focus = FocusNode();
   CalculatorBloc _bloc;
+  AnimationController _animationController;
+  Animation _animation;
 
   @override
   void initState() {
-    _bloc = CalculatorBloc();
     super.initState();
+    _bloc = CalculatorBloc();
+    _animationController =
+        AnimationController(duration: Duration(seconds: 4), vsync: this);
   }
 
   @override
@@ -24,13 +29,13 @@ class CalculatorViewState extends State<CalculatorView> {
         title: Text(
           "IMCalc",
           style: TextStyle(
-            color: Colors.deepOrange
+            color: Colors.black
           ),
         ),
       ),
       body: Center(
         child: Container(
-          color: Colors.blue,
+          color: Colors.cyan,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -41,9 +46,10 @@ class CalculatorViewState extends State<CalculatorView> {
                   margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
-                    color: Colors.deepOrange,
+                    color: Colors.white,
                   ),
                   child: TextField(
+                    textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       prefixIcon: Icon(Icons.fitness_center),
@@ -53,9 +59,13 @@ class CalculatorViewState extends State<CalculatorView> {
                     keyboardType: TextInputType.numberWithOptions(
                       decimal: true
                     ),
+                    style: TextStyle(
+                      color: Colors.cyan
+                    ),
                     onChanged: (value) {
                       _bloc.setWeight(double.tryParse(value));
                     },
+                    onSubmitted: (value) => FocusScope.of(context).requestFocus(_focus),
                   ),
                 ),
               ),
@@ -65,10 +75,10 @@ class CalculatorViewState extends State<CalculatorView> {
                   margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
-                    color: Colors.deepOrange,
+                    color: Colors.white,
                   ),
                   child: TextField(
-                    textInputAction: TextInputAction.newline,
+                    focusNode: _focus,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       prefixIcon: Icon(Icons.vertical_align_top),
@@ -77,9 +87,13 @@ class CalculatorViewState extends State<CalculatorView> {
                     keyboardType: TextInputType.numberWithOptions(
                       decimal: true
                     ),
+                    style: TextStyle(
+                      color: Colors.cyan
+                    ),
                     onChanged: (value) {
                       _bloc.setHeight(double.tryParse(value));
                     },
+                    onSubmitted: (_) => _bloc.calculate(),
                   ),
                 ),
               ),
@@ -87,11 +101,24 @@ class CalculatorViewState extends State<CalculatorView> {
                 initialData: 0.0,
                 stream: _bloc.imc,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    return snapshot.hasData 
-                      ? ImcComponent(bmi: snapshot.data as double)
-                      : CircularProgressIndicator();
+                  if (snapshot.hasData) {
+                    double animationValue = snapshot.data as double;
+                    _animation = Tween(begin: animationValue, end: 0).animate(
+                      CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
+                    print(_animation.value.toString());
+                    _animationController.forward();
+                    return AnimatedBuilder(
+                      animation: _animationController,
+                      builder: (BuildContext context, Widget child) {
+                        // return ImcComponent(bmi: snapshot.data as double);
+                        return ImcComponent(bmi: double.tryParse(_animation.value.toString()));
+                      }
+                    );
+                  } else {
+                    return CircularProgressIndicator();
                   }
-              )
+                }
+              ),
             ]
           ),
         )
