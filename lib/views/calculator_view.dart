@@ -30,7 +30,7 @@ class CalculatorViewState extends State<CalculatorView> {
       ),
       body: Center(
         child: Container(
-          color: Colors.black,
+          color: Colors.blue,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -45,6 +45,7 @@ class CalculatorViewState extends State<CalculatorView> {
                   ),
                   child: TextField(
                     decoration: InputDecoration(
+                      border: InputBorder.none,
                       prefixIcon: Icon(Icons.fitness_center),
                       labelText: "Weight",
                     ),
@@ -69,6 +70,7 @@ class CalculatorViewState extends State<CalculatorView> {
                   child: TextField(
                     textInputAction: TextInputAction.newline,
                     decoration: InputDecoration(
+                      border: InputBorder.none,
                       prefixIcon: Icon(Icons.vertical_align_top),
                       labelText: "Height (cm)",
                     ),
