@@ -17,6 +17,10 @@ class CalculatorBloc {
     _height.add(height);
   }
 
+  void reset() {
+    _imc.add(0);
+  }
+
   void dispose() {
     _weight.close();
     _height.close();

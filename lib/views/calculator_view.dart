@@ -7,18 +7,16 @@ class CalculatorView extends StatefulWidget {
   State<StatefulWidget> createState() => CalculatorViewState();
 }
 
-class CalculatorViewState extends State<CalculatorView> with TickerProviderStateMixin {
+class CalculatorViewState extends State<CalculatorView> {
   final _focus = FocusNode();
+  final _weightTextController = TextEditingController();
+  final _heightTextController = TextEditingController();
   CalculatorBloc _bloc;
-  AnimationController _animationController;
-  Animation _animation;
 
   @override
   void initState() {
     super.initState();
     _bloc = CalculatorBloc();
-    _animationController =
-        AnimationController(duration: Duration(seconds: 4), vsync: this);
   }
 
   @override
@@ -49,6 +47,7 @@ class CalculatorViewState extends State<CalculatorView> with TickerProviderState
                     color: Colors.white,
                   ),
                   child: TextField(
+                    controller: _weightTextController,
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
                       border: InputBorder.none,
@@ -78,6 +77,7 @@ class CalculatorViewState extends State<CalculatorView> with TickerProviderState
                     color: Colors.white,
                   ),
                   child: TextField(
+                    controller: _heightTextController,
                     focusNode: _focus,
                     decoration: InputDecoration(
                       border: InputBorder.none,
@@ -102,22 +102,15 @@ class CalculatorViewState extends State<CalculatorView> with TickerProviderState
                 stream: _bloc.imc,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
-                    double animationValue = snapshot.data as double;
-                    _animation = Tween(begin: animationValue, end: 0).animate(
-                      CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
-                    print(_animation.value.toString());
-                    _animationController.forward();
-                    return AnimatedBuilder(
-                      animation: _animationController,
-                      builder: (BuildContext context, Widget child) {
-                        // return ImcComponent(bmi: snapshot.data as double);
-                        return ImcComponent(bmi: double.tryParse(_animation.value.toString()));
-                      }
-                    );
+                    return new MyHomePage(snapshot.data as double);
                   } else {
                     return CircularProgressIndicator();
                   }
                 }
+              ),
+              FlatButton(
+                child: Text("Reset"),
+                onPressed: _reset,
               ),
             ]
           ),
@@ -125,5 +118,10 @@ class CalculatorViewState extends State<CalculatorView> with TickerProviderState
       ),
     );
   }
-  
+
+  _reset() {
+    _weightTextController.clear();
+    _heightTextController.clear();
+    _bloc.reset();
+  }
 }
