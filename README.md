@@ -1,6 +1,6 @@
 # imcalc
 
-A new Flutter project.
+A simple BMI calculator, made just for fun and learning purposes.
 
 ## Getting Started
 
