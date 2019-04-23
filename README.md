@@ -1,6 +1,8 @@
 # imcalc
 
-A simple BMI calculator, made just for fun and learning purposes.
+A simple BMI calculator, made just for fun and learning purposes Made using BLoC, RxDart and a simple CurvedAnimation.
+
+![app](https://raw.githubusercontent.com/muniz95/imcalc/master/demo.gif)
 
 ## Getting Started
 
